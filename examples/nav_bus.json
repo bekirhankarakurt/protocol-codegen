@@ -1,0 +1,55 @@
+{
+  "name": "navbus",
+  "title": "Navigation Bus",
+  "version": 1,
+  "endianness": "big",
+  "crc": "crc32",
+  "sync": 126,
+  "udp_port": 47002,
+  "enums": [
+    {
+      "name": "TrackState",
+      "type": "uint8",
+      "values": { "NEW": 0, "CONFIRMED": 1, "COASTING": 2, "DROPPED": 3 }
+    },
+    {
+      "name": "Health",
+      "type": "int8",
+      "values": { "DEGRADED": -1, "NOMINAL": 0, "GOOD": 1 }
+    }
+  ],
+  "messages": [
+    {
+      "name": "PositionReport",
+      "id": 1,
+      "doc": "Geodetic position of a tracked object.",
+      "fields": [
+        { "name": "track_id", "type": "uint32" },
+        { "name": "latitude_deg", "type": "float64" },
+        { "name": "longitude_deg", "type": "float64" },
+        { "name": "altitude_m", "type": "float32" }
+      ]
+    },
+    {
+      "name": "TrackStatus",
+      "id": 2,
+      "fields": [
+        { "name": "track_id", "type": "uint32" },
+        { "name": "state", "type": "TrackState" },
+        { "name": "health", "type": "Health[2]" },
+        { "name": "quality", "type": "uint8" },
+        { "name": "confirmed", "type": "bool[2]" }
+      ]
+    },
+    {
+      "name": "LegacySensor",
+      "id": 3,
+      "endianness": "little",
+      "doc": "Payload kept little-endian for a legacy sensor; the frame stays big-endian.",
+      "fields": [
+        { "name": "raw", "type": "uint16[2]" },
+        { "name": "offset", "type": "int64" }
+      ]
+    }
+  ]
+}

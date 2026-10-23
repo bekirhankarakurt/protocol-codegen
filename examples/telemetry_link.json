@@ -1,0 +1,105 @@
+{
+  "name": "tlink",
+  "title": "Telemetry Link",
+  "version": 2,
+  "endianness": "little",
+  "crc": "crc16",
+  "sync": 165,
+  "udp_port": 47001,
+  "enums": [
+    {
+      "name": "Mode",
+      "type": "uint8",
+      "values": { "IDLE": 0, "ARMED": 1, "FLIGHT": 2, "LANDING": 3, "FAULT": 255 }
+    },
+    {
+      "name": "CommandId",
+      "type": "uint16",
+      "values": { "SET_MODE": 1, "CALIBRATE": 2, "REBOOT": 3 }
+    },
+    {
+      "name": "CommandResult",
+      "type": "uint8",
+      "values": { "ACCEPTED": 0, "REJECTED": 1, "UNSUPPORTED": 2, "FAILED": 3 }
+    }
+  ],
+  "messages": [
+    {
+      "name": "Heartbeat",
+      "id": 1,
+      "doc": "Periodic liveness beacon.",
+      "fields": [
+        { "name": "uptime_ms", "type": "uint32", "doc": "Milliseconds since boot." },
+        { "name": "mode", "type": "Mode" },
+        { "name": "armed", "type": "bool" },
+        { "name": "callsign", "type": "char[8]", "doc": "NUL-padded vehicle identifier." }
+      ]
+    },
+    {
+      "name": "Attitude",
+      "id": 2,
+      "doc": "Vehicle orientation and body rates.",
+      "fields": [
+        { "name": "roll_rad", "type": "float32" },
+        { "name": "pitch_rad", "type": "float32" },
+        { "name": "yaw_rad", "type": "float32" },
+        { "name": "rate_dps", "type": "float32[3]", "doc": "Body rates x, y, z in deg/s." }
+      ]
+    },
+    {
+      "name": "GpsFix",
+      "id": 3,
+      "doc": "Satellite navigation solution.",
+      "fields": [
+        { "name": "timestamp_us", "type": "uint64" },
+        { "name": "latitude_e7", "type": "int32", "doc": "Degrees times 1e7." },
+        { "name": "longitude_e7", "type": "int32", "doc": "Degrees times 1e7." },
+        { "name": "altitude_mm", "type": "int32" },
+        { "name": "speed_cm_s", "type": "uint16" },
+        { "name": "satellites", "type": "uint8" },
+        { "name": "hdop", "type": "float64" }
+      ]
+    },
+    {
+      "name": "ImuSample",
+      "id": 4,
+      "doc": "Raw inertial measurement.",
+      "fields": [
+        { "name": "accel_mg", "type": "int16[3]" },
+        { "name": "gyro_mdps", "type": "int16[3]" },
+        { "name": "temperature_cdeg", "type": "int16", "doc": "Hundredths of a degree Celsius." }
+      ]
+    },
+    {
+      "name": "Command",
+      "id": 10,
+      "doc": "Ground-to-vehicle command.",
+      "fields": [
+        { "name": "command", "type": "CommandId" },
+        { "name": "target", "type": "uint8" },
+        { "name": "params", "type": "float32[4]" }
+      ]
+    },
+    {
+      "name": "CommandAck",
+      "id": 11,
+      "doc": "Vehicle response to a Command.",
+      "fields": [
+        { "name": "command", "type": "CommandId" },
+        { "name": "result", "type": "CommandResult" },
+        { "name": "info", "type": "uint8" }
+      ]
+    },
+    {
+      "name": "BatteryStatus",
+      "id": 20,
+      "since": 2,
+      "doc": "Added in protocol version 2.",
+      "fields": [
+        { "name": "cell_mv", "type": "uint16[4]" },
+        { "name": "current_ma", "type": "int32" },
+        { "name": "remaining_pct", "type": "uint8" }
+      ]
+    }
+  ]
+}
