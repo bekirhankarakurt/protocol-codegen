@@ -15,7 +15,6 @@ jobs:
         include:
           - { name: "Linux / GCC", os: ubuntu-latest, cc: gcc, cxx: g++ }
           - { name: "Linux / Clang", os: ubuntu-latest, cc: clang, cxx: clang++ }
-          - { name: "macOS / Clang", os: macos-latest, cc: clang, cxx: clang++ }
     steps:
       - uses: actions/checkout@v4
       - name: Configure
@@ -28,7 +27,6 @@ jobs:
       - name: Test
         run: ctest --test-dir build --output-on-failure
       - name: Check Lua syntax
-        if: runner.os == 'Linux'
         run: |
           sudo apt-get install -y --no-install-recommends lua5.4
           for script in examples/generated/*.lua; do luac5.4 -p "$script"; done

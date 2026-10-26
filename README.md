@@ -5,7 +5,7 @@ Describe a binary link once in JSON; get a bounds-checked, CRC-framed C++17 seri
 [![CI](https://github.com/bekirhankarakurt/protocol-codegen/actions/workflows/ci.yml/badge.svg)](https://github.com/bekirhankarakurt/protocol-codegen/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![C++17](https://img.shields.io/badge/C%2B%2B-17-00599C.svg)](https://en.cppreference.com/w/cpp/17)
-[![Platform](https://img.shields.io/badge/platform-Linux%20%7C%20macOS-lightgrey.svg)](#requirements)
+[![Platform](https://img.shields.io/badge/platform-Linux-lightgrey.svg)](#requirements)
 
 ## Why / what
 
@@ -90,7 +90,7 @@ if (tlink::decode_frame(wire.data(), wire.size(), message, &used) == tlink::Stat
 
 | Requirement | Version | Needed for |
 |---|---|---|
-| C++17 compiler | GCC 11+, Clang 14+, Apple Clang (CI: GCC 13, Clang 18) | generator, tests, generated header |
+| C++17 compiler | GCC 11+, Clang 14+ (CI: current Ubuntu GCC and Clang) | generator, tests, generated header |
 | CMake | 3.16+ | build |
 | Wireshark / tshark | 3.x or 4.x (tested with 4.2) | optional, to use the Lua dissector |
 | Lua (`luac`) | 5.2+ | optional, syntax-checking the dissector |
@@ -259,7 +259,7 @@ cmake --build build -j && ctest --test-dir build --output-on-failure
 | `roundtrip` | Round-trip of all messages (both endiannesses, CRC-16/32), byte-exact wire format against independent CRC code, every truncation, every single-bit flip, version rules, 20,000 random/mutated frames |
 | `cli_check_*` | `--check` confirms committed outputs are current |
 
-The dissector was verified with tshark 4.2 against captures from `demo` (CRC verdicts, enums, arrays, big-endian and per-message endianness). CI runs GCC, Clang (Linux, macOS) and a GCC ASan/UBSan job, all with `-Werror`.
+The dissector was verified with tshark 4.2 against captures from `demo` (CRC verdicts, enums, arrays, big-endian and per-message endianness). CI runs GCC, Clang and a GCC ASan/UBSan job on Linux, all with `-Werror`.
 
 ## Troubleshooting / FAQ
 
@@ -289,7 +289,7 @@ The dissector was verified with tshark 4.2 against captures from `demo` (CRC ver
 │   ├── generated/              committed generator output (checked by golden tests)
 │   └── demo.cpp                encode/decode demo, pcap writer
 ├── tests/                      dependency-free test harness and suites
-└── .github/workflows/ci.yml    GCC, Clang, macOS, ASan/UBSan
+└── .github/workflows/ci.yml    GCC, Clang, ASan/UBSan
 ```
 
 ## Roadmap
