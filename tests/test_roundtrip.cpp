@@ -1,5 +1,6 @@
 #include <cstdint>
 #include <cstring>
+#include <stdexcept>
 #include <vector>
 
 #include "check.hpp"
@@ -48,6 +49,14 @@ Bytes tlink_frame(std::uint8_t version, std::uint16_t id, const Bytes& payload) 
 
 tlink::Status decode(const Bytes& frame, tlink::Message& out, std::size_t* consumed = nullptr) {
     return tlink::decode_frame(frame.data(), frame.size(), out, consumed);
+}
+
+/// Encodes `message` as a version-2 frame; throws if encoding fails.
+template <typename M>
+Bytes encode_or_throw(const M& message) {
+    Bytes frame;
+    if (tlink::encode_frame(message, frame) != tlink::Status::Ok) throw std::runtime_error("encode failed");
+    return frame;
 }
 
 template <typename M>
@@ -206,8 +215,7 @@ TEST(detects_every_single_bit_flip) {
 }
 
 TEST(reports_specific_header_errors) {
-    Bytes frame;
-    CHECK(tlink::encode_frame(sample_heartbeat(), frame) == tlink::Status::Ok);
+    const Bytes frame = encode_or_throw(sample_heartbeat());
     tlink::Message out;
 
     Bytes bad_sync = frame;
