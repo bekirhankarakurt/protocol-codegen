@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { name: "Linux / GCC", os: ubuntu-latest, cc: gcc, cxx: g++ }
+          - { name: "Linux / Clang", os: ubuntu-latest, cc: clang, cxx: clang++ }
+          - { name: "macOS / Clang", os: macos-latest, cc: clang, cxx: clang++ }
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DPCG_WERROR=ON
+        env:
+          CC: ${{ matrix.cc }}
+          CXX: ${{ matrix.cxx }}
+      - name: Build
+        run: cmake --build build --parallel
+      - name: Test
+        run: ctest --test-dir build --output-on-failure
+      - name: Check Lua syntax
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get install -y --no-install-recommends lua5.4
+          for script in examples/generated/*.lua; do luac5.4 -p "$script"; done
+
+  sanitizers:
+    name: Linux / GCC + ASan + UBSan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DPCG_WERROR=ON -DPCG_SANITIZE=ON
+        env:
+          CXX: g++
+      - name: Build
+        run: cmake --build build --parallel
+      - name: Test
+        run: ctest --test-dir build --output-on-failure
+      - name: Run demo
+        run: ./build/demo
