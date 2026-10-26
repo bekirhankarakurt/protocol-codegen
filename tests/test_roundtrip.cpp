@@ -225,7 +225,7 @@ TEST(reports_specific_header_errors) {
     CHECK(tlink::decode_frame(nullptr, 0, out) == tlink::Status::Truncated);
 
     Bytes bad_crc = frame;
-    bad_crc.back() = static_cast<std::uint8_t>(bad_crc.back() ^ 0xFFU);
+    bad_crc[tlink::kHeaderSize + 1] = static_cast<std::uint8_t>(bad_crc[tlink::kHeaderSize + 1] ^ 0xFFU);
     CHECK(decode(bad_crc, out) == tlink::Status::BadCrc);
 
     CHECK(decode(tlink_frame(0, 1, Bytes(14)), out) == tlink::Status::UnsupportedVersion);
