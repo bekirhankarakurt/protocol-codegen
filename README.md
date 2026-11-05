@@ -3,6 +3,7 @@
 Describe a binary link once in JSON; get a bounds-checked, CRC-framed C++17 serializer and a Wireshark Lua dissector that can never drift apart.
 
 [![CI](https://github.com/bekirhankarakurt/protocol-codegen/actions/workflows/ci.yml/badge.svg)](https://github.com/bekirhankarakurt/protocol-codegen/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/bekirhankarakurt/protocol-codegen)](https://github.com/bekirhankarakurt/protocol-codegen/releases/latest)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![C++17](https://img.shields.io/badge/C%2B%2B-17-00599C.svg)](https://en.cppreference.com/w/cpp/17)
 [![Platform](https://img.shields.io/badge/platform-Linux-lightgrey.svg)](#requirements)
