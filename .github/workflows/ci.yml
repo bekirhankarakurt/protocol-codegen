@@ -16,7 +16,7 @@ jobs:
           - { name: "Linux / GCC", os: ubuntu-latest, cc: gcc, cxx: g++ }
           - { name: "Linux / Clang", os: ubuntu-latest, cc: clang, cxx: clang++ }
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Configure
         run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DPCG_WERROR=ON
         env:
@@ -35,7 +35,7 @@ jobs:
     name: Linux / GCC + ASan + UBSan
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Configure
         run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DPCG_WERROR=ON -DPCG_SANITIZE=ON
         env:
